@@ -5,10 +5,7 @@ return {
     build = ':TSUpdate',
     main = 'nvim-treesitter.configs',
     opts = {
-      ensure_installed = {
-        'lua', 'bash', 'c', 'cpp', 'python',
-        'json', 'toml', 'markdown', 'vim', 'vimdoc', 'csv',
-      },
+      ensure_installed = {},
       sync_install = false,
       highlight = { enable = true },
       indent    = { enable = true },
