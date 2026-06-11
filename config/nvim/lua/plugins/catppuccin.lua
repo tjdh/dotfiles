@@ -31,18 +31,6 @@ return {
             Constant  = { fg = colors.peach },
 
             CursorLine = { bg = colors.surface0 },
-
-            -- Bufferline: only the active buffer has a visible background
-            BufferLineBackground       = { bg = colors.base,   fg = colors.overlay0 },
-            BufferLineFill             = { bg = "none" },
-            BufferLineBufferVisible    = { bg = "none",         fg = colors.overlay0 },
-            BufferLineCloseButton      = { bg = "none" },
-            BufferLineCloseButtonVisible = { bg = "none" },
-            BufferLineSeparator        = { bg = "none",         fg = colors.base },
-            BufferLineSeparatorVisible = { bg = "none",         fg = colors.base },
-            BufferLineModified         = { bg = "none" },
-            BufferLineModifiedVisible  = { bg = "none" },
-            BufferLineTab              = { bg = "none" },
           }
         end,
       })
@@ -59,6 +47,32 @@ return {
       }) do
         vim.api.nvim_set_hl(0, group, { bg = "none", ctermbg = "none" })
       end
+
+      -- BufferLine groups are set by the bufferline plugin after catppuccin,
+      -- so we defer until the next event loop tick to win the race.
+      vim.schedule(function()
+        for _, group in ipairs({
+          "BufferLineFill",
+          "BufferLineBackground",
+          "BufferLineBufferVisible",
+          "BufferLineTab",
+          "BufferLineTabClose",
+          "BufferLineCloseButton",
+          "BufferLineCloseButtonVisible",
+          "BufferLineSeparator",
+          "BufferLineSeparatorVisible",
+          "BufferLineModified",
+          "BufferLineModifiedVisible",
+          "BufferLineDuplicate",
+          "BufferLineDuplicateVisible",
+          "BufferLineIndicatorVisible",
+        }) do
+          local hl = vim.api.nvim_get_hl(0, { name = group, link = false })
+          hl.bg = nil
+          hl.ctermbg = nil
+          vim.api.nvim_set_hl(0, group, hl)
+        end
+      end)
 
     end,
   },
