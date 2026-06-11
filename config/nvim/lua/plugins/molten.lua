@@ -1,6 +1,14 @@
+local function on_wsl()
+  local f = io.open("/proc/version", "r")
+  if not f then return false end
+  local v = f:read("*a"); f:close()
+  return v:lower():find("microsoft") ~= nil
+end
+
 return {
   {
     "benlubas/molten-nvim",
+    cond = on_wsl,
     version = "^1.0.0",
     build = ":UpdateRemotePlugins",
     dependencies = { "image.nvim" },
@@ -10,6 +18,7 @@ return {
   },
   {
     "3rd/image.nvim",
+    cond = on_wsl,
     name = "image.nvim",
     config = function()
       -- WSL2 + tmux: $TMUX may be unset over SSH; force tmux passthrough mode
@@ -31,6 +40,7 @@ return {
   },
   {
     "GCBallesteros/jupytext.nvim",
+    cond = on_wsl,
     config = true,
   },
 }

@@ -16,7 +16,8 @@ return {
           loops = { "italic" },
         },
         integrations = {
-          telescope = true,
+          telescope  = true,
+          bufferline = true,
         },
         custom_highlights = function(colors)
           return {
@@ -44,6 +45,9 @@ return {
       }) do
         vim.api.nvim_set_hl(0, group, { bg = "none", ctermbg = "none" })
       end
+
+      -- Subtle cursorline rather than the heavy catppuccin default
+      vim.api.nvim_set_hl(0, "CursorLine", { bg = "#313244" })
     end,
   },
 }
