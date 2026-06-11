@@ -41,7 +41,7 @@ return {
         },
       }
 
-      telescope.load_extension('fzf')
+      pcall(telescope.load_extension, 'fzf')
 
       local function find_files_from_git_root()
         local opts = utils.is_git_repo() and { cwd = utils.get_git_root() } or {}

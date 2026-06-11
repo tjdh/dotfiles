@@ -19,11 +19,14 @@ return {
         tmux_utils.is_tmux = true
         tmux_utils.has_passthrough = true
       end
-      require("image").setup({
+      local setup_ok, err = pcall(require("image").setup, {
         backend  = "iterm2",
         processor = "magick_cli",
         tmux_show_only_in_active_window = false,
       })
+      if not setup_ok then
+        vim.notify("image.nvim disabled: " .. tostring(err):match("image%.nvim: (.+)$") or tostring(err), vim.log.levels.WARN)
+      end
     end,
   },
   {
