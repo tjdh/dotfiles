@@ -1,185 +1,98 @@
-vim.g.mapleader = " "
+require('confs.options')
+require('confs.keybindings')
+require('confs.lazy')
 
--- UI
-vim.opt.number = true
-vim.opt.relativenumber = true
-vim.opt.termguicolors = true
-
--- Clipboard
-vim.opt.clipboard = "unnamedplus"
-
--- Indentation (4 spaces)
-vim.opt.expandtab = true
-vim.opt.shiftwidth = 4
-vim.opt.tabstop = 4
-vim.opt.smartindent = true
-vim.opt.autoindent = true
-
--- Lazy.nvim bootstrap from vendored copy; falls back to cloning if not present
-local dotfiles = vim.fn.expand("~/dotfiles")
-local lazypath = dotfiles .. "/vendor/nvim/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-  lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-  if not vim.loop.fs_stat(lazypath) then
-    vim.fn.system({
-      "git", "clone", "--filter=blob:none",
-      "https://github.com/folke/lazy.nvim.git", lazypath,
-    })
-  end
-end
-vim.opt.rtp:prepend(lazypath)
-
-local p = dotfiles .. "/vendor/nvim/plugins"
-
-require("lazy").setup({
-
-  { dir = p .. "/plenary.nvim" },
-
-  -- Theme
-  {
-    dir = p .. "/catppuccin",
-    name = "catppuccin",
-    priority = 1000,
-    config = function()
-      require("catppuccin").setup({
-        flavour = "mocha",
-        term_colors = true,
-        styles = {
-          comments = { "italic" },
-          keywords = { "italic" },
-          conditionals = { "italic" },
-          loops = { "italic" },
-        },
-        integrations = {
-          telescope = true,
-        },
-        custom_highlights = function(colors)
-          return {
-            String = { fg = colors.yellow },
-            Character = { fg = colors.yellow },
-            Number = { fg = colors.peach },
-            Boolean = { fg = colors.peach },
-            Function = { fg = colors.blue },
-            Keyword = { fg = colors.mauve, italic = true },
-            Type = { fg = colors.yellow },
-            Constant = { fg = colors.peach },
-          }
-        end,
-      })
-
-      vim.cmd.colorscheme("catppuccin")
-
-      -- ensure strings aren't green
-      vim.api.nvim_set_hl(0, "@string", { fg = "#f9e2af" })
-      vim.api.nvim_set_hl(0, "@character", { fg = "#f9e2af" })
-    end,
-  },
-
-  -- Telescope
-  {
-    dir = p .. "/telescope.nvim",
-    dependencies = { { dir = p .. "/plenary.nvim" } },
-  },
-
-  -- Harpoon
-  {
-    dir = p .. "/harpoon",
-    dependencies = { { dir = p .. "/plenary.nvim" } },
-  },
-
-  -- Autopairs
-  {
-    dir = p .. "/nvim-autopairs",
-    event = "InsertEnter",
-    config = function()
-      require("nvim-autopairs").setup({})
-    end,
-  },
-
-  { dir = p .. "/nvim-web-devicons" },
-
-  -- Dashboard with cow
-  {
-    dir = p .. "/dashboard-nvim",
-    event = "VimEnter",
-    config = function()
-      local dashboard = require("dashboard")
-
-      local function cow_fortune()
-        local fortune = vim.fn.systemlist("fortune -s")
-        local text = table.concat(fortune, " "):gsub("'", [["'"']])
-        local cow = vim.fn.systemlist("printf '%s' '" .. text .. "' | cowsay -W 40")
-
-        local max_len = 0
-        for _, line in ipairs(cow) do
-          if #line > max_len then
-            max_len = #line
-          end
-        end
-
-        for i, line in ipairs(cow) do
-          cow[i] = line .. string.rep(" ", max_len - #line)
-        end
-
-        return cow
-      end
-
-      dashboard.setup({
-        theme = "doom",
-        config = {
-          header = cow_fortune(),
-          center = {
-            {
-              icon = " ",
-              desc = "Find files",
-              key = "ff",
-              action = "lua require('telescope.builtin').find_files()",
-            },
-            {
-              icon = " ",
-              desc = "Live grep",
-              key = "ag",
-              action = "lua require('telescope.builtin').live_grep()",
-            },
-          },
-        },
-      })
-    end,
-  },
-
-}, {
-  checker = { enabled = false },
-  change_detection = { enabled = false },
+-- Kill xsel on exit (avoids zombie clipboard processes)
+vim.api.nvim_create_autocmd("VimLeave", {
+  group = vim.api.nvim_create_augroup("KillXSel", { clear = true }),
+  callback = function() os.execute("killall xsel") end,
 })
 
--- Harpoon keybinds
-local harpoon = require("harpoon")
-harpoon:setup()
+-- Restore last cursor position when reopening a file
+local lastplace = vim.api.nvim_create_augroup("LastPlace", {})
+vim.api.nvim_clear_autocmds({ group = lastplace })
+vim.api.nvim_create_autocmd("BufWinEnter", {
+  group   = lastplace,
+  pattern = "*",
+  command = "silent! normal! g`\"zv",
+})
 
-vim.keymap.set("n", "<leader>a", function()
-  harpoon:list():append()
-end)
+-- Emacs-style line start/end
+vim.keymap.set({'n','v','o'}, '<C-a>', '^')
+vim.keymap.set({'n','v','o'}, '<C-e>', '$')
+vim.keymap.set('i', '<C-a>', '<C-o>^')
+vim.keymap.set('i', '<C-e>', '<End>')
 
-vim.keymap.set("n", "<leader>h", function()
-  harpoon.ui:toggle_quick_menu(harpoon:list())
-end)
+-- Visual surround shortcuts
+vim.keymap.set('v', '(',  'c()<Esc>P')
+vim.keymap.set('v', '[',  'c[]<Esc>P')
+vim.keymap.set('v', '{',  'c{}<Esc>P')
+vim.keymap.set('v', '"',  'c""<Esc>P')
+vim.keymap.set('v', "'", "c''<Esc>P")
 
-vim.keymap.set("n", "<leader>1", function()
-  harpoon:list():select(1)
-end)
+-- OSC 52 clipboard passthrough (SSH sessions only)
+if vim.fn.has('nvim-0.10') == 1 and vim.env.SSH_TTY then
+  vim.g.clipboard = {
+    name  = 'OSC 52 (copy only)',
+    copy  = {
+      ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
+      ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
+    },
+    paste = {
+      ['+'] = function() return { vim.fn.split(vim.fn.getreg(''), '\n'), vim.fn.getregtype('') } end,
+      ['*'] = function() return { vim.fn.split(vim.fn.getreg(''), '\n'), vim.fn.getregtype('') } end,
+    },
+  }
+end
 
-vim.keymap.set("n", "<leader>2", function()
-  harpoon:list():select(2)
-end)
+-- Molten globals (these override any settings in the plugin spec's init)
+vim.g.molten_output_win_max_height = 20
+vim.g.molten_virt_text_output      = true
+vim.g.molten_virt_lines_off_by_1   = true
+vim.g.molten_auto_open_output      = false
+vim.g.molten_wrap_output           = true
 
-vim.keymap.set("n", "<leader>3", function()
-  harpoon:list():select(3)
-end)
+local function molten_eval_cell()
+  local line = vim.fn.line('.')
+  local last = vim.fn.line('$')
+  local start_line = 1
+  for i = line, 1, -1 do
+    if vim.fn.getline(i):match('^%s*#%s*%%%%') then
+      start_line = i + 1
+      break
+    end
+  end
+  local next_cell_line = nil
+  for i = line + 1, last do
+    if vim.fn.getline(i):match('^%s*#%s*%%%%') then
+      next_cell_line = i
+      break
+    end
+  end
+  local end_line = next_cell_line and (next_cell_line - 1) or last
+  vim.fn.MoltenEvaluateRange(start_line, end_line)
+  if next_cell_line then
+    vim.api.nvim_win_set_cursor(0, { math.min(next_cell_line + 1, vim.fn.line('$')), 0 })
+  else
+    vim.api.nvim_buf_set_lines(0, end_line, end_line, false, { '', '# %%', '' })
+    vim.api.nvim_win_set_cursor(0, { end_line + 3, 0 })
+  end
+end
 
-vim.keymap.set("n", "<leader>4", function()
-  harpoon:list():select(4)
-end)
+vim.keymap.set('n', '<leader>mi', ':MoltenInit<CR>',                    { desc = 'Molten: init kernel'             })
+vim.keymap.set('n', '<leader>ml', ':MoltenEvaluateLine<CR>',            { desc = 'Molten: eval line'              })
+vim.keymap.set('v', '<leader>mr', ':<C-u>MoltenEvaluateVisual<CR>gv',   { desc = 'Molten: eval visual'            })
+vim.keymap.set('n', '<leader>mo', ':MoltenShowOutput<CR>',              { desc = 'Molten: show output'            })
+vim.keymap.set('n', '<leader>mh', ':MoltenHideOutput<CR>',              { desc = 'Molten: hide output'            })
+vim.keymap.set('n', '<leader>md', ':MoltenDelete<CR>',                  { desc = 'Molten: delete cell'            })
+vim.keymap.set('n', '<leader>me', function()
+  vim.cmd('MoltenShowOutput')
+  vim.schedule(function() vim.cmd('noautocmd MoltenEnterOutput') end)
+end, { desc = 'Molten: show + enter output' })
+vim.keymap.set('n', '<leader>mc', molten_eval_cell,                     { desc = 'Molten: eval cell'              })
+vim.keymap.set('n', '<S-CR>',     molten_eval_cell,                     { desc = 'Molten: eval cell (Shift+Enter)'})
 
--- Background
-vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none"})
+vim.keymap.set('n', ']c',       function() vim.fn.search('^\\s*#\\s*%%', 'W')  end, { desc = 'Next cell'         })
+vim.keymap.set('n', '[c',       function() vim.fn.search('^\\s*#\\s*%%', 'bW') end, { desc = 'Prev cell'         })
+vim.keymap.set('n', '<C-Down>', function() vim.fn.search('^\\s*#\\s*%%', 'W')  end, { desc = 'Next cell (Ctrl+↓)'})
+vim.keymap.set('n', '<C-Up>',   function() vim.fn.search('^\\s*#\\s*%%', 'bW') end, { desc = 'Prev cell (Ctrl+↑)'})

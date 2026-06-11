@@ -18,11 +18,18 @@ link() {
     ln -sfn "$src" "$dst"
 }
 
-link "$DOTFILES/tmux.conf" "$HOME/.tmux.conf"
-link "$DOTFILES/zshrc" "$HOME/.zshrc"
-link "$DOTFILES/gitconfig" "$HOME/.gitconfig"
-link "$DOTFILES/config/nvim" "$HOME/.config/nvim"
+link "$DOTFILES/tmux.conf"           "$HOME/.tmux.conf"
+link "$DOTFILES/zshrc"               "$HOME/.zshrc"
+link "$DOTFILES/gitconfig"           "$HOME/.gitconfig"
+link "$DOTFILES/config/nvim"         "$HOME/.config/nvim"
 link "$DOTFILES/config/starship.toml" "$HOME/.config/starship.toml"
+
+# Claude Code
+mkdir -p "$HOME/.claude/themes"
+link "$DOTFILES/claude/settings.json"            "$HOME/.claude/settings.json"
+link "$DOTFILES/claude/keybindings.json"         "$HOME/.claude/keybindings.json"
+link "$DOTFILES/claude/statusline-command.py"    "$HOME/.claude/statusline-command.py"
+link "$DOTFILES/claude/themes/softspectrum.json" "$HOME/.claude/themes/softspectrum.json"
 
 if grep -qi microsoft /proc/version 2>/dev/null; then
     WIN_HOME="$(wslpath "$(powershell.exe -NoProfile -Command '[Environment]::GetFolderPath("UserProfile")' | tr -d '\r')")"

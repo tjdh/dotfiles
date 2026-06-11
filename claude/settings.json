@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "model": "sonnet",
+  "theme": "custom:softspectrum",
+  "tui": "fullscreen",
+  "effortLevel": "high",
+  "preferredNotifChannel": "terminal_bell",
+  "skipAutoPermissionPrompt": true,
+  "env": {
+    "DISABLE_TELEMETRY": "1",
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "permissions": {
+    "defaultMode": "auto",
+    "allow": [
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git branch*)",
+      "Bash(git show*)",
+      "Bash(git rev-parse*)",
+      "Bash(ls*)",
+      "Bash(pwd)",
+      "Bash(cat*)",
+      "Bash(head*)",
+      "Bash(tail*)",
+      "Bash(wc*)",
+      "Bash(find*)",
+      "Bash(grep*)",
+      "Bash(rg*)",
+      "Bash(sort*)",
+      "Bash(uniq*)",
+      "Bash(tree*)",
+      "Bash(which*)",
+      "Bash(echo*)",
+      "Bash(file*)",
+      "Bash(type*)",
+      "Bash(sed*)",
+      "Bash(awk*)",
+      "Bash(cut*)",
+      "Bash(xargs*)",
+      "Bash(mkdir*)",
+      "Bash(basename*)",
+      "Bash(diff*)",
+      "Bash(sleep*)",
+      "Bash(python3*)",
+      "Bash(python*)"
+    ],
+    "deny": [
+      "Bash(rm -rf /)",
+      "Bash(rm -rf ~)",
+      "Bash(rm -rf /*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(~/.ssh/*)"
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "python3 $HOME/.claude/statusline-command.py"
+  }
+}

@@ -37,7 +37,7 @@ end
 
 if wezterm.target_triple:find("windows") then
     config.default_prog = { "wsl.exe", "--cd", "~" }
-    config.front_end = "WebGpu"
+    config.front_end = "OpenGL"
 end
 
 return config
