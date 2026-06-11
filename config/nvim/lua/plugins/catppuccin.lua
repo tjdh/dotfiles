@@ -29,6 +29,20 @@ return {
             Keyword   = { fg = colors.mauve, italic = true },
             Type      = { fg = colors.yellow },
             Constant  = { fg = colors.peach },
+
+            CursorLine = { bg = colors.surface0 },
+
+            -- Bufferline: only the active buffer has a visible background
+            BufferLineBackground       = { bg = colors.base,   fg = colors.overlay0 },
+            BufferLineFill             = { bg = "none" },
+            BufferLineBufferVisible    = { bg = "none",         fg = colors.overlay0 },
+            BufferLineCloseButton      = { bg = "none" },
+            BufferLineCloseButtonVisible = { bg = "none" },
+            BufferLineSeparator        = { bg = "none",         fg = colors.base },
+            BufferLineSeparatorVisible = { bg = "none",         fg = colors.base },
+            BufferLineModified         = { bg = "none" },
+            BufferLineModifiedVisible  = { bg = "none" },
+            BufferLineTab              = { bg = "none" },
           }
         end,
       })
@@ -46,8 +60,6 @@ return {
         vim.api.nvim_set_hl(0, group, { bg = "none", ctermbg = "none" })
       end
 
-      -- Subtle cursorline rather than the heavy catppuccin default
-      vim.api.nvim_set_hl(0, "CursorLine", { bg = "#313244" })
     end,
   },
 }
