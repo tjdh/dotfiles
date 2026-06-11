@@ -116,4 +116,4 @@ bindkey "^[[1;5D" backward-word
 bindkey -e
 
 # Starship
-eval "$(starship init zsh)"
+command -v starship &>/dev/null && eval "$(starship init zsh)"
