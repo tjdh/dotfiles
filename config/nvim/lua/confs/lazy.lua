@@ -22,9 +22,12 @@ require("lazy").setup({
     { import = "plugins" },
   },
   defaults = { lazy = false },
+  root = dotfiles .. "/vendor/nvim/plugins",
+  git = { cooldown = 0 },
   checker = { enabled = false },
   change_detection = { enabled = false },
   rocks = { enabled = false },
+  install = { missing = false },
 })
 
 local map = require('confs.utils').map
