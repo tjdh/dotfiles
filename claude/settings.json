@@ -1,17 +1,10 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "model": "sonnet",
-  "theme": "custom:softspectrum",
-  "tui": "fullscreen",
-  "effortLevel": "high",
-  "preferredNotifChannel": "terminal_bell",
-  "skipAutoPermissionPrompt": true,
   "env": {
     "DISABLE_TELEMETRY": "1",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
   "permissions": {
-    "defaultMode": "auto",
     "allow": [
       "Bash(git status*)",
       "Bash(git diff*)",
@@ -55,10 +48,17 @@
       "Read(./.env)",
       "Read(./.env.*)",
       "Read(~/.ssh/*)"
-    ]
+    ],
+    "defaultMode": "auto"
   },
+  "model": "sonnet",
   "statusLine": {
     "type": "command",
     "command": "python3 $HOME/.claude/statusline-command.py"
-  }
+  },
+  "effortLevel": "medium",
+  "tui": "fullscreen",
+  "theme": "custom:softspectrum",
+  "preferredNotifChannel": "terminal_bell",
+  "skipAutoPermissionPrompt": true
 }

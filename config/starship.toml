@@ -5,12 +5,12 @@ scan_timeout = 100
 format = """
 [](#C2366B)\
 $time\
-[](fg:#C2366B bg:#DA627D)\
+[](fg:#C2366B bg:#E38964)\
 $username\
-[](fg:#DA627D bg:#FCA17D)\
+[](fg:#E38964 bg:#33658A)\
 $git_branch\
 $git_status\
-[](fg:#FCA17D)\
+[](fg:#33658A)\
 $directory\
 """
 
@@ -21,8 +21,8 @@ $directory\
 # and use the os module below
 [username]
 show_always = true
-style_user = "fg:#ffffff bg:#DA627D"
-style_root = "fg:#ffffff bg:#DA627D"
+style_user = "fg:#ffffff bg:#E38964"
+style_root = "fg:#ffffff bg:#E38964"
 format = '[ $user ]($style)'
 disabled = false
 
@@ -33,7 +33,7 @@ style = "bg:#C2366B"
 disabled = true # Disabled by default
 
 [directory]
-style = "fg:#ffffff bg:#FCA17D"
+style = "fg:#ffffff bg:#33658A"
 format = " $path> "
 truncation_length = 3
 truncation_symbol = "…/"
@@ -79,11 +79,11 @@ format = '[ $symbol ($version) ]($style)'
 
 [git_branch]
 symbol = ""
-style = "fg:#ffffff bg:#FCA17D"
+style = "fg:#ffffff bg:#33658A"
 format = '[ $symbol $branch ]($style)'
 
 [git_status]
-style = "fg:#ffffff bg:#FCA17D"
+style = "fg:#ffffff bg:#33658A"
 format = '[$all_status$ahead_behind ]($style)'
 
 [golang]
