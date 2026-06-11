@@ -15,26 +15,29 @@ vim.opt.tabstop = 4
 vim.opt.smartindent = true
 vim.opt.autoindent = true
 
--- Lazy.nvim bootstrap
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+-- Lazy.nvim bootstrap from vendored copy; falls back to cloning if not present
+local dotfiles = vim.fn.expand("~/dotfiles")
+local lazypath = dotfiles .. "/vendor/nvim/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    lazypath,
-  })
+  lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+  if not vim.loop.fs_stat(lazypath) then
+    vim.fn.system({
+      "git", "clone", "--filter=blob:none",
+      "https://github.com/folke/lazy.nvim.git", lazypath,
+    })
+  end
 end
 vim.opt.rtp:prepend(lazypath)
 
+local p = dotfiles .. "/vendor/nvim/plugins"
+
 require("lazy").setup({
 
-  { "nvim-lua/plenary.nvim" },
+  { dir = p .. "/plenary.nvim" },
 
   -- Theme
   {
-    "catppuccin/nvim",
+    dir = p .. "/catppuccin",
     name = "catppuccin",
     priority = 1000,
     config = function()
@@ -74,31 +77,30 @@ require("lazy").setup({
 
   -- Telescope
   {
-    "nvim-telescope/telescope.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
+    dir = p .. "/telescope.nvim",
+    dependencies = { { dir = p .. "/plenary.nvim" } },
   },
 
   -- Harpoon
   {
-    "ThePrimeagen/harpoon",
-    branch = "harpoon2",
-    dependencies = { "nvim-lua/plenary.nvim" },
+    dir = p .. "/harpoon",
+    dependencies = { { dir = p .. "/plenary.nvim" } },
   },
 
   -- Autopairs
   {
-    "windwp/nvim-autopairs",
+    dir = p .. "/nvim-autopairs",
     event = "InsertEnter",
     config = function()
       require("nvim-autopairs").setup({})
     end,
   },
 
-  { "nvim-tree/nvim-web-devicons" },
+  { dir = p .. "/nvim-web-devicons" },
 
   -- Dashboard with cow
   {
-    "nvimdev/dashboard-nvim",
+    dir = p .. "/dashboard-nvim",
     event = "VimEnter",
     config = function()
       local dashboard = require("dashboard")
@@ -128,13 +130,13 @@ require("lazy").setup({
           header = cow_fortune(),
           center = {
             {
-              icon = " ",
+              icon = " ",
               desc = "Find files",
               key = "ff",
               action = "lua require('telescope.builtin').find_files()",
             },
             {
-              icon = " ",
+              icon = " ",
               desc = "Live grep",
               key = "ag",
               action = "lua require('telescope.builtin').live_grep()",
@@ -144,6 +146,10 @@ require("lazy").setup({
       })
     end,
   },
+
+}, {
+  checker = { enabled = false },
+  change_detection = { enabled = false },
 })
 
 -- Harpoon keybinds

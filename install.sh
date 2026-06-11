@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Clone: git clone git@gitlab:<user>/dotfiles.git ~/dotfiles && ~/dotfiles/install.sh
 
 set -e
 

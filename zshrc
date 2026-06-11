@@ -31,8 +31,9 @@ hash -d win=/mnt/c/Users/dumbh
 export EDITOR=nvim
 
 # Plugins
-source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+DOTFILES="$HOME/dotfiles"
+source "$DOTFILES/vendor/zsh/zsh-autosuggestions/zsh-autosuggestions.zsh"
+source "$DOTFILES/vendor/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 # Keybindings
 bindkey "^[[1;5C" forward-word
