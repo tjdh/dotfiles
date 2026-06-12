@@ -30,10 +30,11 @@ MONTHLY_LIMIT = 1500  # user-stated monthly usage limit, in USD
 # 5-minute (1.25x base) and 1-hour (2x base) tiers; cache reads are 0.1x base.
 # This is an API-list-rate ESTIMATE -- subscription/enterprise billing differs.
 PRICING = {
-    "opus-4":   {"in": 15.0, "out": 75.0, "cw5": 18.75, "cw1h": 30.0, "cr": 1.50},
+    "fable":    {"in": 10.0, "out": 50.0, "cw5": 12.50, "cw1h": 20.0, "cr": 1.00},
+    "opus-4":   {"in": 5.0,  "out": 25.0, "cw5": 6.25,  "cw1h": 10.0, "cr": 0.50},
     "sonnet-4": {"in": 3.0,  "out": 15.0, "cw5": 3.75,  "cw1h": 6.0,  "cr": 0.30},
-    "haiku":    {"in": 0.80, "out": 4.0,  "cw5": 1.00,  "cw1h": 1.60, "cr": 0.08},
-    "default":  {"in": 15.0, "out": 75.0, "cw5": 18.75, "cw1h": 30.0, "cr": 1.50},
+    "haiku":    {"in": 1.0,  "out": 5.0,  "cw5": 1.25,  "cw1h": 2.0,  "cr": 0.10},
+    "default":  {"in": 10.0, "out": 50.0, "cw5": 12.50, "cw1h": 20.0, "cr": 1.00},
 }
 
 # ANSI truecolor (Da Vinci brand palette)
@@ -62,7 +63,7 @@ def abbrev(path):
 
 def pricing_for(model_id):
     m = (model_id or "").lower()
-    for key in ("opus-4", "sonnet-4", "haiku"):
+    for key in ("fable", "opus-4", "sonnet-4", "haiku"):
         if key in m:
             return PRICING[key]
     return PRICING["default"]

@@ -38,7 +38,6 @@ end
 if wezterm.target_triple:find("windows") then
     config.default_prog = { "wsl.exe", "--cd", "~" }
     config.front_end = "OpenGL"
-    config.font_size = 10.0
 end
 
 return config
