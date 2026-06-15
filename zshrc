@@ -90,6 +90,9 @@ export PATH="/usr/games:$PATH"
 # Named directories
 hash -d win=/mnt/c/Users/dumbh
 
+# Date shorthand
+td=$(date +%Y%m%d)
+
 # Editor
 export EDITOR=nvim
 
