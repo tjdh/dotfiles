@@ -111,9 +111,9 @@ ZSH_HIGHLIGHT_MAXLENGTH=512
 source "$DOTFILES/vendor/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 # Keybindings
+bindkey -e
 bindkey "^[[1;5C" forward-word
 bindkey "^[[1;5D" backward-word
-bindkey -e
 
 # Starship
 command -v starship &>/dev/null && eval "$(starship init zsh)"
