@@ -6,7 +6,7 @@ return {
     dir = p .. "/telescope.nvim",
     dependencies = {
       { dir = p .. "/plenary.nvim" },
-      { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+      { dir = p .. "/telescope-fzf-native.nvim", name = "telescope-fzf-native.nvim", build = 'make' },
     },
     config = function()
       local telescope = require('telescope')
