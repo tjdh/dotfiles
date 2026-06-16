@@ -90,6 +90,9 @@ export PATH="/usr/games:$PATH"
 # Named directories
 hash -d win=/mnt/c/Users/dumbh
 
+# Date shorthand
+td=$(date +%Y%m%d)
+
 # Editor
 export EDITOR=nvim
 
@@ -111,9 +114,9 @@ ZSH_HIGHLIGHT_MAXLENGTH=512
 source "$DOTFILES/vendor/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 # Keybindings
+bindkey -e
 bindkey "^[[1;5C" forward-word
 bindkey "^[[1;5D" backward-word
-bindkey -e
 
 # Starship
 command -v starship &>/dev/null && eval "$(starship init zsh)"

@@ -27,6 +27,7 @@ link "$DOTFILES/tmux.conf"           "$HOME/.tmux.conf"
 link "$DOTFILES/zshrc"               "$HOME/.zshrc"
 link "$DOTFILES/gitconfig"           "$HOME/.gitconfig"
 link "$DOTFILES/config/nvim"         "$HOME/.config/nvim"
+link "$DOTFILES/vendor/nvim/mason"   "$HOME/.local/share/nvim/mason"
 link "$DOTFILES/config/starship.toml" "$HOME/.config/starship.toml"
 
 # Claude Code

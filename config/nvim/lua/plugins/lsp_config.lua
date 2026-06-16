@@ -1,7 +1,9 @@
 vim.o.winborder = "rounded"
 
 local float_table = { float = { border = "rounded" } }
-local lsp_servers = { "pyright", "clangd", "bashls", "lua_ls" }
+-- clangd installed via apt (mason binary download fails on WSL2)
+local mason_servers = { "pyright", "bashls", "lua_ls" }
+local lsp_servers   = { "pyright", "clangd", "bashls", "lua_ls" }
 
 return {
   {
@@ -25,7 +27,7 @@ return {
       })
 
       require("mason-lspconfig").setup({
-        ensure_installed = lsp_servers,
+        ensure_installed = mason_servers,
         automatic_enable = true,
       })
 
